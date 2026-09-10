@@ -1,0 +1,10 @@
+# El historico solo crece: si el cron del servidor y una ejecucion local
+# anaden lecturas a la vez, no hay conflicto real, hay que quedarse con las
+# dos. "union" hace exactamente eso y evita un conflicto por cada ejecucion.
+history/*.jsonl merge=union
+
+# Ficheros generados. Marcarlos evita que ensucien las diferencias al
+# revisar cambios: se regeneran en cada ejecucion.
+docs/index.html linguist-generated=true
+docs/data.json  linguist-generated=true
+state/*.json    linguist-generated=true
