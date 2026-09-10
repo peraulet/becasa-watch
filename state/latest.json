@@ -1,5 +1,5 @@
 {
-  "ts": "2026-09-10T15:03:44+00:00",
+  "ts": "2026-09-10T18:35:04+00:00",
   "estancia_dias": 335,
   "check_in": "2026-10-10",
   "check_out": "2027-09-10",
@@ -284,6 +284,51 @@
       "admite_renovaciones": false,
       "descuentos_pct": [
         10
+      ],
+      "mes_gratis": false
+    },
+    {
+      "url": "https://cmseditor.becasaapartments.com/wp-content/uploads/2026/03/BCB-Promocion-30-03-26.pdf",
+      "titulo": "BCB-Promocion-30-03-26",
+      "fecha": "2026-03-29T10:34:05",
+      "menciona_edificio": false,
+      "admite_renovaciones": false,
+      "descuentos_pct": [
+        5
+      ],
+      "mes_gratis": false
+    },
+    {
+      "url": "https://cmseditor.becasaapartments.com/wp-content/uploads/2026/03/BCA-Promocion-30-03-2026.pdf",
+      "titulo": "BCA-Promoción-30-03-2026",
+      "fecha": "2026-03-29T10:34:04",
+      "menciona_edificio": false,
+      "admite_renovaciones": false,
+      "descuentos_pct": [
+        10,
+        5
+      ],
+      "mes_gratis": false
+    },
+    {
+      "url": "https://cmseditor.becasaapartments.com/wp-content/uploads/2026/03/dossier_cugat_mar2026.pdf",
+      "titulo": "dossier_cugat_mar2026",
+      "fecha": "2026-03-25T13:34:29",
+      "menciona_edificio": false,
+      "admite_renovaciones": false,
+      "descuentos_pct": [],
+      "mes_gratis": false
+    },
+    {
+      "url": "https://cmseditor.becasaapartments.com/wp-content/uploads/2026/03/Promociones-Marzo.pdf",
+      "titulo": "Promociones Marzo",
+      "fecha": "2026-03-16T09:37:24",
+      "menciona_edificio": false,
+      "admite_renovaciones": false,
+      "descuentos_pct": [
+        15,
+        10,
+        5
       ],
       "mes_gratis": false
     }
