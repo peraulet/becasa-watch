@@ -1,0 +1,11 @@
+{
+  "edificio": "san-sebastian-reyes",
+  "umbral_eur": 960,
+  "renta_actual_eur": 1000,
+  "estancia_dias": 335,
+  "ids": ["1328", "1329", "1322", "1323", "1330", "1331", "1332", "1333", "1607", "13077"],
+  "avisar_por_debajo_del_umbral": true,
+  "avisar_bajada_de_precio": true,
+  "avisar_unidad_nueva": true,
+  "avisar_promocion_nueva": true
+}

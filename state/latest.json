@@ -1,0 +1,140 @@
+{
+  "ts": "2026-09-10T11:12:23+00:00",
+  "estancia_dias": 335,
+  "unidades": [
+    {
+      "id": "1322",
+      "nombre": "Apartamento 2 dormitorios con terraza",
+      "eur_mes": 1543.0,
+      "eur_noche": 100.0,
+      "min_stay_dias": 61,
+      "max_stay_dias": 362,
+      "disponible": true,
+      "limpieza_eur": null,
+      "estado": "reservable",
+      "fuente": "html"
+    },
+    {
+      "id": "1323",
+      "nombre": "Apartamento 2 dormitorios con terraza y camas twin",
+      "eur_mes": 1603.0,
+      "eur_noche": 100.0,
+      "min_stay_dias": 61,
+      "max_stay_dias": 362,
+      "disponible": true,
+      "limpieza_eur": null,
+      "estado": "reservable",
+      "fuente": "html"
+    },
+    {
+      "id": "1328",
+      "nombre": "Estudio adaptado",
+      "eur_mes": 921.0,
+      "eur_noche": 100.0,
+      "min_stay_dias": 61,
+      "max_stay_dias": 362,
+      "disponible": true,
+      "limpieza_eur": null,
+      "estado": "reservable",
+      "fuente": "html"
+    },
+    {
+      "id": "1329",
+      "nombre": "Estudio con terraza",
+      "eur_mes": 921.0,
+      "eur_noche": 100.0,
+      "min_stay_dias": 61,
+      "max_stay_dias": 362,
+      "disponible": true,
+      "limpieza_eur": null,
+      "estado": "reservable",
+      "fuente": "html"
+    },
+    {
+      "id": "1330",
+      "nombre": null,
+      "eur_mes": null,
+      "eur_noche": null,
+      "min_stay_dias": null,
+      "max_stay_dias": null,
+      "disponible": null,
+      "limpieza_eur": null,
+      "estado": "proximamente",
+      "fuente": "html"
+    },
+    {
+      "id": "1331",
+      "nombre": null,
+      "eur_mes": null,
+      "eur_noche": null,
+      "min_stay_dias": null,
+      "max_stay_dias": null,
+      "disponible": null,
+      "limpieza_eur": null,
+      "estado": "proximamente",
+      "fuente": "html"
+    },
+    {
+      "id": "1332",
+      "nombre": null,
+      "eur_mes": null,
+      "eur_noche": null,
+      "min_stay_dias": null,
+      "max_stay_dias": null,
+      "disponible": null,
+      "limpieza_eur": null,
+      "estado": "proximamente",
+      "fuente": "html"
+    },
+    {
+      "id": "1333",
+      "nombre": null,
+      "eur_mes": null,
+      "eur_noche": null,
+      "min_stay_dias": null,
+      "max_stay_dias": null,
+      "disponible": null,
+      "limpieza_eur": null,
+      "estado": "proximamente",
+      "fuente": "html"
+    },
+    {
+      "id": "1607",
+      "nombre": null,
+      "eur_mes": null,
+      "eur_noche": null,
+      "min_stay_dias": null,
+      "max_stay_dias": null,
+      "disponible": null,
+      "limpieza_eur": null,
+      "estado": "proximamente",
+      "fuente": "html"
+    },
+    {
+      "id": "13077",
+      "nombre": null,
+      "eur_mes": null,
+      "eur_noche": null,
+      "min_stay_dias": null,
+      "max_stay_dias": null,
+      "disponible": null,
+      "limpieza_eur": null,
+      "estado": "proximamente",
+      "fuente": "html"
+    }
+  ],
+  "tramos_duracion": {
+    "none": 893.0,
+    "m2_3": 1111.0,
+    "m4_6": 1111.0,
+    "m7_9": 1024.0,
+    "m10_12": 893.0
+  },
+  "promos_web": [
+    "Ahorra hasta 248€/mes (a partir de 2 meses)",
+    "Ahorra hasta 93€/mes (a partir de 7 meses)",
+    "Ahorra hasta 93€/mes (a partir de 10 meses)",
+    "ahorrar hasta 321€"
+  ],
+  "promos_cms": []
+}

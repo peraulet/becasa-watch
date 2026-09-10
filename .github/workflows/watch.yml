@@ -1,0 +1,48 @@
+name: Vigilar precios
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'      # GitHub retrasa los cron en horas punta: real 30-60 min
+  workflow_dispatch:            # para lanzarlo a mano desde la pestana Actions
+
+permissions:
+  contents: write               # necesario para versionar el historico
+
+concurrency:
+  group: watch
+  cancel-in-progress: false     # nunca cortar una ejecucion a medias: dejaria estado a medias
+
+jobs:
+  vigilar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: pip install --quiet -r requirements.txt
+
+      - name: Comprobar precios
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          ALERT_TO: ${{ secrets.ALERT_TO }}
+        run: python -m becasa.watch
+
+      - name: Versionar lo que haya cambiado
+        run: |
+          git config user.name  "becasa-watch"
+          git config user.email "becasa-watch@users.noreply.github.com"
+          git add state history docs
+          # sin cambios no hay commit, para no ensuciar el historial con ruido
+          if git diff --cached --quiet; then
+            echo "Sin cambios."
+          else
+            git commit -m "Lectura $(date -u '+%Y-%m-%d %H:%M') UTC"
+            git push
+          fi
