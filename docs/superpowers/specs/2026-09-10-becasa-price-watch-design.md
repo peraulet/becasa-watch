@@ -23,19 +23,40 @@ Estos hechos están verificados contra la web real y condicionan todo el diseño
 - **El precio de escaparate miente.** La ficha comercial anuncia el estudio con terraza
   «desde 1.123 €», pero el motor de reservas lo da a **921 €/mes**. La web de marketing va
   desactualizada respecto al buscador. Vigilar solo la ficha comercial daría datos falsos.
-- **El motor de reservas es un Next.js sobre GraphQL (Lavanda).** Sirve las tarifas ya
-  estructuradas dentro del HTML, en el payload de React Server Components:
-  `{"__typename":"Rates","rateAmountCents":92100,"interval":"calendar_monthly","minStay":61}`.
-  Se lee con HTTP plano. **No hace falta Playwright ni navegador headless.**
-- **Estado actual del edificio** (10 tipologías, 4 reservables):
+- **Hay una API GraphQL pública y sin autenticación.** El motor de reservas es un Next.js
+  sobre Lavanda. La API acepta consultas anónimas con solo una cabecera de sitio:
 
-  | ID | Unidad | Precio real |
-  |---|---|---|
-  | 1328 | Estudio adaptado | 921 €/mes |
-  | 1329 | Estudio con terraza | 921 €/mes |
-  | 1322 | Apto. 2 dorm. con terraza | 1.543 €/mes |
-  | 1323 | Apto. 2 dorm. terraza + twin | 1.603 €/mes |
-  | 1330, 1331, 1332, 1333, 1607, 13077 | «Próximamente» | 404 (no reservables) |
+  ```
+  POST https://api.lavanda.app/api/graphql
+  X-Hanami-Direct-Bookings-Site-Code: a6180e15-8715-495f-9039-6264c8041901
+
+  query($id:Int!,$site:String!,$in:ISO8601Date!,$out:ISO8601Date!,$coupon:String){
+    property(id:$id, siteCode:$site, checkIn:$in, checkOut:$out,
+             numberOfGuests:1, locale:"es", couponCode:$coupon){
+      title available currency cleaningFee
+      rates { rateAmountCents interval minStay maxStay }
+      couponDiscount { valid code amount rejectionReason }
+    }
+  }
+  ```
+
+  **No hace falta Playwright ni navegador headless.** La introspección está abierta, así
+  que el esquema es verificable sin adivinar.
+
+- **Estado del edificio verificado por API el 2026-09-10** (10 tipologías, 4 reservables):
+
+  | ID | Unidad | `calendar_monthly` | €/mes |
+  |---|---|---|---|
+  | 1328 | Estudio adaptado | 92100 | **921** |
+  | 1329 | Estudio con terraza | 92100 | **921** |
+  | 1322 | Apto. 2 dorm. con terraza | 154300 | 1.543 |
+  | 1323 | Apto. 2 dorm. terraza + twin | 160300 | 1.603 |
+  | 1330, 1331, 1332, 1333, 1607, 13077 | «Próximamente» | — | no existen como unidad reservable |
+
+  Todas con `available: true`, `minStay: 61`, `maxStay: 362`. Estas cifras coinciden con
+  las extraídas del HTML por una vía independiente, de modo que ambas fuentes se validan
+  entre sí. El bot usará la API como fuente primaria y el HTML como control cruzado: una
+  discrepancia entre ambas es señal de que algo ha cambiado y merece revisión.
 
 - **Tarifas por duración de estancia** (de `becasaPageContext` en la ficha comercial):
   10-12 meses → 893 €/mes · 7-9 meses → 1.024 € · 2-6 meses → 1.111 €.
@@ -83,7 +104,8 @@ reciben texto, no URLs.
 | Módulo | Responsabilidad | Depende de |
 |---|---|---|
 | `becasa/fetch.py` | HTTP con reintentos, cabeceras y backoff | stdlib |
-| `becasa/booking.py` | Decodifica el payload Next.js → `Unit(id, nombre, precio, min_stay, estado)` | — |
+| `becasa/api.py` | Cliente GraphQL de Lavanda → `Unit(id, nombre, eur_mes, min_stay, max_stay, disponible, limpieza, fianza)` | — |
+| `becasa/booking.py` | Decodifica el payload Next.js del HTML; control cruzado de `api.py` | — |
 | `becasa/marketing.py` | Extrae `becasaPageContext` y banners de promo | — |
 | `becasa/promos.py` | Descubre PDFs nuevos en el CMS y extrae su texto | `pypdf` |
 | `becasa/diff.py` | Compara snapshots y decide qué merece aviso | — |
@@ -102,7 +124,7 @@ reciben texto, no URLs.
   "edificio": "san-sebastian-reyes",
   "umbral_eur": 960,
   "renta_actual_eur": 1000,
-  "estancia_dias": 365,
+  "estancia_dias": 335,
   "vigilar_tipos": "todos",
   "avisar_por_debajo_del_umbral": true,
   "avisar_bajada_de_precio": true,
@@ -111,9 +133,11 @@ reciben texto, no URLs.
 }
 ```
 
-`estancia_dias` (por defecto **365**) selecciona el tramo de tarifa por duración
-correspondiente y se registra en cada snapshot, de modo que el histórico siempre indica a
-qué duración se refiere el precio guardado.
+`estancia_dias` (por defecto **335**, once meses) fija la ventana `checkIn`/`checkOut` de
+la consulta y se registra en cada snapshot, de modo que el histórico siempre indica a qué
+duración se refiere el precio guardado. **Se valida contra el rango 61-362**: fuera de él
+la API no devuelve tarifa mensual, así que un valor inválido en `config.json` debe fallar
+de forma ruidosa al arrancar, nunca degradarse en silencio a la tarifa por noche.
 
 `renta_actual_eur` es lo que paga hoy el usuario. No afecta a los avisos: alimenta la línea
 de referencia del panel, para ver de un vistazo cuánto se paga de más frente a un
@@ -198,15 +222,38 @@ público los minutos de Actions son gratuitos e ilimitados.
 
 > Si se usa una contraseña de aplicación de Gmail, hay que **pegarla sin espacios**.
 
-## Decisión pendiente
+## Limitaciones conocidas
 
-**Consulta directa a la API GraphQL de Lavanda.** El endpoint
-(`https://api.lavanda.app/api/graphql`, cabecera
-`X-Hanami-Direct-Bookings-Site-Code: a6180e15-8715-495f-9039-6264c8041901`, sin API key)
-permitiría pedir `PropertyBookingSummary` con `checkIn`/`checkOut` reales y obtener el
-**precio exacto para las fechas del usuario**, en lugar de la tarifa base publicada.
+Se documentan aquí para que nadie las descubra a medias dentro de seis meses.
 
-El clasificador de seguridad del entorno bloqueó esta llamada durante la investigación. El
-diseño actual **no depende de ella**: funciona con la tarifa base, que ya es el dato bueno
-(921 €/mes). Si el usuario autoriza la llamada, se añade como refinamiento en una fase
-posterior, con una consulta por ejecución para no generar carga innecesaria.
+1. **No hay cotización en vivo para fechas concretas.** El campo `accommodationFare` de la
+   API devuelve siempre la tarifa por noche (100 €/noche), no la mensual, con
+   independencia de la duración solicitada. No se ha identificado qué parámetro activa el
+   cálculo mensual; se sospecha del contexto multi-unidad (`mu=1`), sin confirmar.
+
+   **Es irrelevante para el objetivo**: el array `rates` de esa misma respuesta sí trae la
+   tarifa `calendar_monthly` autoritativa, que es el dato que el bot necesita. Se lee
+   `rates`, no `accommodationFare`.
+
+2. **La tarifa mensual solo aparece si la estancia consultada cae entre 61 y 362 noches.**
+   Fuera de ese rango, `rates` solo devuelve la tarifa por noche. Por eso `estancia_dias`
+   se limita a ese intervalo.
+
+3. **Un año natural completo no es contratable.** El `maxStay` de 362 noches lo impide. Un
+   contrato de 365 días requiere hablar con el comercial, no pasa por el motor de reservas.
+
+4. **Los seis tipos «Próximamente» no existen todavía como unidad reservable.** La API
+   responde `Couldn't find Spaces::MultiUnitGroup`. El bot trata esa respuesta como estado
+   esperado, y su desaparición es precisamente el disparador de «unidad nueva disponible».
+
+## Validación de códigos promocionales
+
+El tipo `StayCouponDiscount` expone `valid`, `code`, `amount` y `rejectionReason`, y el
+argumento `couponCode` se puede pasar a `property`. Esto permite **comprobar si un código
+concreto sigue vigente y cuánto descuenta**, sin simular una reserva.
+
+Se implementa como comando manual (`python -m becasa.cupon CODIGO`), para códigos que el
+usuario reciba por email, boletín o convenio (por ejemplo, el acuerdo de AICA con Be Casa).
+
+**No se implementará enumeración de códigos.** Probar códigos a ciegas contra la API de un
+tercero es tráfico abusivo, y además sería inútil: Be Casa no usa cupones públicos.
