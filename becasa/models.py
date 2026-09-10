@@ -26,6 +26,8 @@ class Snapshot:
     """Fotografia completa del edificio en un instante."""
     ts: str
     estancia_dias: int
+    check_in: str = ''
+    check_out: str = ''
     unidades: list = field(default_factory=list)
     tramos_duracion: dict = field(default_factory=dict)
     promos_web: list = field(default_factory=list)

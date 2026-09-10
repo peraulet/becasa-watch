@@ -161,3 +161,22 @@ def test_ficha_comercial_incluye_el_estudio_basico():
     assert cards['Estudio con terraza'] == 1123.0
     # y no duplica la misma tipologia escrita de dos maneras
     assert 'Apartamento de 2 dormitorios' not in cards
+
+
+# --- censo de unidades ----------------------------------------------------
+def test_el_censo_sale_del_buscador_no_de_la_ficha():
+    """La ficha comercial no enlaza todas las unidades del edificio.
+
+    El estudio basico (1327), que es el mas barato, no aparece enlazado por
+    ningun sitio. Sacar el censo de los enlaces comerciales dejaba fuera la
+    tipologia que mas importa.
+    """
+    from becasa import buscador
+    payload = (
+        '"__typename":"Property","id":1327,"city":"San Sebastián de los Reyes",'
+        '"rates":[]'
+        '"__typename":"Property","id":9999,"city":"Rivas-Vaciamadrid","rates":[]'
+        '"__typename":"Property","id":1328,"city":"San Sebastian de los Reyes"')
+    ids = buscador.censo(payload, 'San Sebastián de los Reyes')
+    assert ids == ['1327', '1328']          # sin tildes tambien empareja
+    assert '9999' not in ids                # y no cuela otro edificio

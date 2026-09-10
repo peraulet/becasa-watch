@@ -99,6 +99,13 @@ svg text{font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeri
 .bar{transition:opacity .12s}
 .bar:hover{opacity:.78}
 
+.btn{display:inline-flex; align-items:center; gap:8px; align-self:flex-start;
+  background:var(--accent); color:var(--surface); text-decoration:none;
+  padding:11px 18px; border-radius:3px; font-weight:600; font-size:14px;
+  border:1px solid var(--accent)}
+.btn:hover{opacity:.9}
+.btn:focus-visible{outline:2px solid var(--ink); outline-offset:2px}
+
 /* --- promos ---------------------------------------------------------- */
 .promos{display:flex; flex-direction:column; gap:11px}
 .promo{display:flex; gap:12px; align-items:baseline; padding:12px 14px;
@@ -302,8 +309,12 @@ def generar(docs: pathlib.Path, snap, hist, cfg):
                   'no cotizado por el motor de reservas">ficha</span>'
                   if u.get('fuente') == 'ficha' else
                   '<span class="pill no" title="Tarifa del motor de reservas">motor</span>')
+        nombre = _esc(u.get('nombre') or 'Unidad ' + u['id'])
+        if not u['id'].startswith('ficha:'):
+            nombre = (f'<a href="https://book.becasaapartments.com/es/properties/'
+                      f'{u["id"]}?mu=1">{nombre}</a>')
         filas.append(
-            f'<tr><td>{_esc(u.get("nombre") or "Unidad " + u["id"])}</td>'
+            f'<tr><td>{nombre}</td>'
             f'<td class="r num">{precio}</td>'
             f'<td class="r num">{estancia}</td>'
             f'<td class="r">{origen}</td>'
@@ -339,6 +350,8 @@ def generar(docs: pathlib.Path, snap, hist, cfg):
         f'<tr><td>{ETQ.get(k, k)}</td><td class="r num">{_eur(v)} €</td></tr>'
         for k, v in sorted(tramos.items(), key=lambda kv: kv[1]) if k != 'none')
 
+    ci = d.get('check_in') or ''
+    co = d.get('check_out') or ''
     html = f'''<title>{TITULO}</title>{FUENTES}<style>{CSS}</style>
 <div class="wrap">
 <header>
@@ -352,6 +365,17 @@ def generar(docs: pathlib.Path, snap, hist, cfg):
 </header>
 
 <div class="verdict">{''.join(celdas)}</div>
+
+<section class="block">
+  <div class="head"><h2>Verlo en su web</h2>
+    <p class="note">Estas tarifas no se muestran en la ficha de cada alojamiento:
+       la web solo las calcula al buscar con fechas de estancia larga. Este enlace
+       abre su buscador con el mismo periodo que usa el panel
+       (<span class="num">{ci}</span> a <span class="num">{co}</span>), que es
+       donde aparecen escritas.</p></div>
+  <a class="btn" href="https://book.becasaapartments.com/es/search?checkIn={ci}&amp;checkOut={co}">
+     Abrir el buscador con estas fechas →</a>
+</section>
 
 <section class="block">
   <div class="head"><h2>Precio frente a tus dos líneas</h2>

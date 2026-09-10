@@ -1,7 +1,21 @@
 {
-  "ts": "2026-09-10T12:10:02+00:00",
+  "ts": "2026-09-10T12:16:34+00:00",
   "estancia_dias": 335,
+  "check_in": "2026-10-10",
+  "check_out": "2027-09-10",
   "unidades": [
+    {
+      "id": "1321",
+      "nombre": "Apartamento 2 dormitorios con camas individuales",
+      "eur_mes": 1573.0,
+      "eur_noche": 100.0,
+      "min_stay_dias": 61,
+      "max_stay_dias": 362,
+      "disponible": true,
+      "limpieza_eur": null,
+      "estado": "reservable",
+      "fuente": "html"
+    },
     {
       "id": "1322",
       "nombre": "Apartamento 2 dormitorios con terraza",
@@ -18,6 +32,54 @@
       "id": "1323",
       "nombre": "Apartamento 2 dormitorios con terraza y camas twin",
       "eur_mes": 1603.0,
+      "eur_noche": 100.0,
+      "min_stay_dias": 61,
+      "max_stay_dias": 362,
+      "disponible": true,
+      "limpieza_eur": null,
+      "estado": "reservable",
+      "fuente": "html"
+    },
+    {
+      "id": "1324",
+      "nombre": "Apartamento 1 dormitorio",
+      "eur_mes": 1190.0,
+      "eur_noche": 100.0,
+      "min_stay_dias": 61,
+      "max_stay_dias": 362,
+      "disponible": true,
+      "limpieza_eur": null,
+      "estado": "reservable",
+      "fuente": "html"
+    },
+    {
+      "id": "1325",
+      "nombre": "Apartamento 1 dormitorio con terraza",
+      "eur_mes": 1250.0,
+      "eur_noche": 100.0,
+      "min_stay_dias": 61,
+      "max_stay_dias": 362,
+      "disponible": true,
+      "limpieza_eur": null,
+      "estado": "reservable",
+      "fuente": "html"
+    },
+    {
+      "id": "1326",
+      "nombre": "Apartamento 2 dormitorios",
+      "eur_mes": 1498.0,
+      "eur_noche": 100.0,
+      "min_stay_dias": 61,
+      "max_stay_dias": 362,
+      "disponible": true,
+      "limpieza_eur": null,
+      "estado": "reservable",
+      "fuente": "html"
+    },
+    {
+      "id": "1327",
+      "nombre": "Estudio",
+      "eur_mes": 871.0,
       "eur_noche": 100.0,
       "min_stay_dias": 61,
       "max_stay_dias": 362,
@@ -121,54 +183,6 @@
       "limpieza_eur": null,
       "estado": "proximamente",
       "fuente": "html"
-    },
-    {
-      "id": "ficha:Estudio",
-      "nombre": "Estudio",
-      "eur_mes": 999.0,
-      "eur_noche": null,
-      "min_stay_dias": null,
-      "max_stay_dias": null,
-      "disponible": null,
-      "limpieza_eur": null,
-      "estado": "reservable",
-      "fuente": "ficha"
-    },
-    {
-      "id": "ficha:Apartamento 1 dormitorio",
-      "nombre": "Apartamento 1 dormitorio",
-      "eur_mes": 1328.0,
-      "eur_noche": null,
-      "min_stay_dias": null,
-      "max_stay_dias": null,
-      "disponible": null,
-      "limpieza_eur": null,
-      "estado": "reservable",
-      "fuente": "ficha"
-    },
-    {
-      "id": "ficha:Apartamento 1 dormitorio con terraza",
-      "nombre": "Apartamento 1 dormitorio con terraza",
-      "eur_mes": 1420.0,
-      "eur_noche": null,
-      "min_stay_dias": null,
-      "max_stay_dias": null,
-      "disponible": null,
-      "limpieza_eur": null,
-      "estado": "reservable",
-      "fuente": "ficha"
-    },
-    {
-      "id": "ficha:Apartamento 2 dormitorios",
-      "nombre": "Apartamento 2 dormitorios",
-      "eur_mes": 1810.0,
-      "eur_noche": null,
-      "min_stay_dias": null,
-      "max_stay_dias": null,
-      "disponible": null,
-      "limpieza_eur": null,
-      "estado": "reservable",
-      "fuente": "ficha"
     }
   ],
   "tramos_duracion": {

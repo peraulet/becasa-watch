@@ -8,7 +8,8 @@ import json
 import pathlib
 import sys
 
-from . import api, booking, diff, fetch, marketing, notify, panel, promos
+from . import (api, booking, buscador, diff, fetch, marketing, notify, panel,
+               promos)
 from .models import Snapshot, Unit
 
 RAIZ = pathlib.Path(__file__).resolve().parent.parent
@@ -123,6 +124,20 @@ def ejecutar(dry_run=False, fuente='auto', sin_promos=False):
     except fetch.FetchError as e:
         print(f'ficha comercial: {e}', file=sys.stderr)
 
+    # El censo bueno sale del buscador, no de la ficha: la ficha no enlaza
+    # todas las unidades del edificio. El estudio basico, que es el mas
+    # barato, no aparece enlazado por ningun lado. Se unen las dos fuentes:
+    # el buscador aporta lo reservable y la ficha, los "proximamente".
+    try:
+        check_in, check_out = api.ventana(cfg['estancia_dias'])
+        del_buscador = buscador.descubrir(EDIFICIO_NOMBRE, check_in, check_out)
+        if del_buscador:
+            ids = sorted(set(ids) | set(del_buscador), key=int)
+            print(f'Censo: {len(del_buscador)} del buscador, '
+                  f'{len(ids)} en total.')
+    except fetch.FetchError as e:
+        print(f'buscador: {e}', file=sys.stderr)
+
     if not ids:
         raise SystemExit('No hay unidades que vigilar: revisa "ids" en config.json')
 
@@ -156,7 +171,9 @@ def ejecutar(dry_run=False, fuente='auto', sin_promos=False):
         # conservamos el historico de campanas ya conocidas
         promos_cms = list(previo.promos_cms) + promos_cms
 
-    snap = Snapshot(ts=ahora, estancia_dias=cfg['estancia_dias'], unidades=unidades,
+    ini, fin = api.ventana(cfg['estancia_dias'])
+    snap = Snapshot(ts=ahora, estancia_dias=cfg['estancia_dias'],
+                    check_in=ini, check_out=fin, unidades=unidades,
                     tramos_duracion=tramos, promos_web=banners, promos_cms=promos_cms)
 
     avisos = diff.comparar(snap, previo, cfg)
