@@ -111,10 +111,12 @@ def ejecutar(dry_run=False, fuente='auto', sin_promos=False):
 
     # ficha comercial: tramos por duracion, banners y el censo de unidades
     tramos, banners, ids = {}, [], list(cfg.get('ids', []))
+    tarjetas_ficha = []
     try:
         _, html_txt = fetch.get_text(marketing.url_edificio(cfg['edificio']))
         tramos = marketing.tramos_duracion(html_txt)
         banners = marketing.promos(html_txt)
+        tarjetas_ficha = marketing.tarjetas(html_txt)
         descubiertos = marketing.ids_unidades(html_txt)
         if descubiertos:
             ids = descubiertos
@@ -125,6 +127,17 @@ def ejecutar(dry_run=False, fuente='auto', sin_promos=False):
         raise SystemExit('No hay unidades que vigilar: revisa "ids" en config.json')
 
     unidades, errores = recoger_unidades(ids, cfg, fuente)
+
+    # No todas las tipologias existen en el motor de reservas: el estudio
+    # basico se anuncia en la ficha pero su pagina de reserva devuelve 404.
+    # Sin esto, la tipologia mas comun del edificio se quedaba sin vigilar.
+    ya = {(u.nombre or '').strip().lower() for u in unidades if u.nombre}
+    for c in tarjetas_ficha:
+        if c['nombre'].strip().lower() in ya:
+            continue
+        unidades.append(Unit(id=f'ficha:{c["nombre"]}', nombre=c['nombre'],
+                             eur_mes=c['eur_mes'], estado='reservable',
+                             fuente='ficha'))
 
     if errores == len(ids):
         n = contar_fallo()

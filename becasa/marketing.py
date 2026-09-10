@@ -100,6 +100,42 @@ def promos(html_txt):
     return out
 
 
+_RE_TARJETA = re.compile(r'Desde\s*([\d.,]+)\s*(?:€|EUR)\s*/\s*mes', re.I)
+_RE_TIPO = re.compile(r'(Estudio(?:\s+(?:superior|adaptado|con\s+terraza))?'
+                      r'|Apartamento\s+(?:completo\s+)?(?:de\s+)?\d\s+dormitorios?'
+                      r'(?:\s+con\s+terraza)?)', re.I)
+
+
+def tarjetas(html_txt):
+    """Tipologias y precio mensual anunciados en la ficha comercial.
+
+    Hace falta porque no todas las tipologias existen en el motor de reservas:
+    el estudio basico, por ejemplo, aparece anunciado aqui pero su pagina de
+    reserva devuelve 404. Sin esto, la tipologia mas comun del edificio se
+    quedaba sin vigilar.
+
+    El precio anunciado NO es equiparable sin mas al del motor: la ficha lo
+    presenta como "coste total" y el motor devuelve la tarifa de alojamiento.
+    Por eso se guarda aparte, con su procedencia marcada.
+    """
+    texto = re.sub(r'[ \n]+', ' ', texto_visible(html_txt))
+    out, vistos = [], set()
+    for m in _RE_TARJETA.finditer(texto):
+        previo = texto[max(0, m.start() - 200):m.start()]
+        tipos = _RE_TIPO.findall(previo)
+        if not tipos:
+            continue
+        nombre = re.sub(r'\s+', ' ', tipos[-1]).strip().capitalize()
+        # "Apartamento de 2 dormitorios" y "Apartamento 2 dormitorios" son lo mismo
+        nombre = re.sub(r'^Apartamento de ', 'Apartamento ', nombre)
+        valor = _num(m.group(1))
+        if not valor or nombre.lower() in vistos:
+            continue
+        vistos.add(nombre.lower())
+        out.append({'nombre': nombre, 'eur_mes': valor})
+    return out
+
+
 def ids_unidades(html_txt):
     """IDs de las unidades enlazadas hacia el motor de reservas."""
     ids = re.findall(r'book\.becasaapartments\.com/[a-z]{2}/properties/(\d+)',

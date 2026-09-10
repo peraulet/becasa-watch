@@ -147,3 +147,17 @@ def test_avisa_de_campana_nueva_solo_una_vez():
 def test_alert_to_admite_varias_direcciones(valor, esperado):
     from becasa.notify import destinatarios
     assert destinatarios(valor) == esperado
+
+
+# --- tipologias que solo existen en la ficha comercial ---------------------
+def test_ficha_comercial_incluye_el_estudio_basico():
+    """El estudio sin terraza no existe en el motor: su pagina devuelve 404.
+
+    Es la tipologia mas comun del edificio, asi que sin leer la ficha se
+    quedaba sin vigilar.
+    """
+    cards = {c['nombre']: c['eur_mes'] for c in marketing.tarjetas(leer('marketing-ssr.html'))}
+    assert cards['Estudio'] == 999.0
+    assert cards['Estudio con terraza'] == 1123.0
+    # y no duplica la misma tipologia escrita de dos maneras
+    assert 'Apartamento de 2 dormitorios' not in cards

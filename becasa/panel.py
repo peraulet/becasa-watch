@@ -298,10 +298,15 @@ def generar(docs: pathlib.Path, snap, hist, cfg):
         else:
             pill = '<span class="pill no">próximamente</span>'
             precio, estancia = '—', '—'
+        origen = ('<span class="pill no" title="Precio anunciado en la ficha comercial, '
+                  'no cotizado por el motor de reservas">ficha</span>'
+                  if u.get('fuente') == 'ficha' else
+                  '<span class="pill no" title="Tarifa del motor de reservas">motor</span>')
         filas.append(
             f'<tr><td>{_esc(u.get("nombre") or "Unidad " + u["id"])}</td>'
             f'<td class="r num">{precio}</td>'
             f'<td class="r num">{estancia}</td>'
+            f'<td class="r">{origen}</td>'
             f'<td class="r">{pill}</td></tr>')
 
     # --- promociones
@@ -339,8 +344,9 @@ def generar(docs: pathlib.Path, snap, hist, cfg):
 <header>
   <span class="eyebrow">Be Casa · San Sebastián de los Reyes</span>
   <h1>Lo que cuesta hoy tu edificio</h1>
-  <p class="sub">Precios reales del motor de reservas, no de la ficha comercial —
-     que va desactualizada. Última lectura
+  <p class="sub">Tarifas del motor de reservas, más las tipologías que solo existen
+     en la ficha comercial — el estudio básico entre ellas. Cada fila indica de dónde
+     sale su precio. Última lectura
      <span class="num">{_esc(d["ts"][:16].replace("T", " "))}</span> UTC,
      para una estancia de <span class="num">{d.get("estancia_dias")}</span> noches.</p>
 </header>
@@ -360,10 +366,16 @@ def generar(docs: pathlib.Path, snap, hist, cfg):
 </section>
 
 <section class="block">
-  <div class="head"><h2>Todas las tipologías</h2></div>
+  <div class="head"><h2>Todas las tipologías</h2>
+    <p class="note">Dos procedencias, y <strong>no son equiparables sin más</strong>.
+       «Motor» es la tarifa de alojamiento que cotiza el buscador de reservas.
+       «Ficha» es el precio anunciado en la web comercial, presentado como coste
+       total: puede incluir servicios que la otra cifra no lleva. Compara dentro
+       de la misma columna, no entre columnas.</p></div>
   <div class="scroll"><table>
     <thead><tr><th>Tipología</th><th class="r">€/mes</th>
-      <th class="r">Estancia (noches)</th><th class="r">Estado</th></tr></thead>
+      <th class="r">Estancia (noches)</th><th class="r">Fuente</th>
+      <th class="r">Estado</th></tr></thead>
     <tbody>{''.join(filas)}</tbody>
   </table></div>
 </section>
