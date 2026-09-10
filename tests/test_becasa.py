@@ -132,3 +132,18 @@ def test_avisa_de_campana_nueva_solo_una_vez():
 
     viejo.promos_cms = nuevo.promos_cms
     assert diff.comparar(nuevo, viejo, CFG) == []
+
+
+# --- destinatarios --------------------------------------------------------
+@pytest.mark.parametrize('valor,esperado', [
+    ('a@x.com', ['a@x.com']),
+    ('a@x.com,b@y.com', ['a@x.com', 'b@y.com']),
+    ('a@x.com, b@y.com', ['a@x.com', 'b@y.com']),
+    ('  a@x.com ; b@y.com , ', ['a@x.com', 'b@y.com']),
+    ('', []),
+    ('   ', []),
+    ('no-es-un-correo', []),
+])
+def test_alert_to_admite_varias_direcciones(valor, esperado):
+    from becasa.notify import destinatarios
+    assert destinatarios(valor) == esperado

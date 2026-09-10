@@ -52,6 +52,9 @@ El panel queda en `docs/index.html`.
 3. En *Settings → Secrets and variables → Actions*, añade cinco secretos:
    `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `ALERT_TO`.
 
+   > `ALERT_TO` admite **varias direcciones** separadas por coma o punto y coma:
+   > `uno@ejemplo.com, dos@ejemplo.com`. Los espacios sobrantes se limpian solos.
+
    > Con una contraseña de aplicación de Gmail, **pégala sin espacios**. El código ya los
    > quita por si acaso, pero es el fallo silencioso clásico.
 

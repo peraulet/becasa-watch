@@ -4,10 +4,22 @@ Las credenciales llegan por variables de entorno, nunca por fichero: asi el
 repositorio puede ser publico sin exponer nada.
 """
 import os
+import re
 import smtplib
 from email.message import EmailMessage
 
 from .booking import url_unidad
+
+
+def destinatarios(valor):
+    """ALERT_TO admite varias direcciones separadas por coma o punto y coma.
+
+    Se limpian los huecos y las comas sobrantes en vez de confiar en que la
+    cabecera se parsee bien: una direccion con un espacio de mas se convierte
+    en un correo que nunca llega y de cuya perdida no te enteras.
+    """
+    partes = [x.strip() for x in re.split(r'[;,]', valor or '')]
+    return [x for x in partes if '@' in x]
 
 
 def config_smtp():
@@ -19,7 +31,7 @@ def config_smtp():
         # las contrasenas de aplicacion de Gmail se copian con espacios y
         # asi no funcionan; quitarlos aqui evita un fallo silencioso tipico
         'pwd': os.environ.get('SMTP_PASS', '').replace(' ', ''),
-        'to': os.environ.get('ALERT_TO', '').strip(),
+        'to': destinatarios(os.environ.get('ALERT_TO', '')),
     }
     if not all((cfg['host'], cfg['user'], cfg['pwd'], cfg['to'])):
         return None
@@ -77,11 +89,13 @@ def enviar(avisos, snap, cfg_app, dry_run=False):
     msg = EmailMessage()
     msg['Subject'] = f'[Be Casa] {cabecera}'
     msg['From'] = smtp['user']
-    msg['To'] = smtp['to']
+    msg['To'] = ', '.join(smtp['to'])
     msg.set_content(cuerpo)
 
     with smtplib.SMTP(smtp['host'], smtp['port'], timeout=30) as s:
         s.starttls()
         s.login(smtp['user'], smtp['pwd'])
-        s.send_message(msg)
+        # los destinatarios van explicitos, no deducidos de la cabecera
+        s.send_message(msg, to_addrs=smtp['to'])
+    print(f'Correo enviado a {len(smtp["to"])} destinatario(s).')
     return True
