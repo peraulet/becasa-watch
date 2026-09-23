@@ -1,5 +1,5 @@
 {
-  "ts": "2026-09-23T12:24:00+00:00",
+  "ts": "2026-09-23T17:18:30+00:00",
   "estancia_dias": 335,
   "check_in": "2026-10-23",
   "check_out": "2027-09-23",
@@ -193,10 +193,10 @@
     "m10_12": 893.0
   },
   "promos_web": [
-    "Ahorra hasta 248€/mes (a partir de 2 meses)",
-    "Ahorra hasta 93€/mes (a partir de 7 meses)",
-    "Ahorra hasta 93€/mes (a partir de 10 meses)",
-    "ahorrar hasta 321€"
+    "Ahorra hasta 210€/mes (a partir de 2 meses)",
+    "Ahorra hasta 115€/mes (a partir de 7 meses)",
+    "Ahorra hasta 95€/mes (a partir de 10 meses)",
+    "ahorrar hasta 302€"
   ],
   "promos_cms": [
     {
