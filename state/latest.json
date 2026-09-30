@@ -1,5 +1,5 @@
 {
-  "ts": "2026-09-30T09:06:09+00:00",
+  "ts": "2026-09-30T15:59:45+00:00",
   "estancia_dias": 335,
   "check_in": "2026-10-30",
   "check_out": "2027-09-30",
@@ -11,7 +11,7 @@
       "eur_noche": 100.0,
       "min_stay_dias": 61,
       "max_stay_dias": 362,
-      "disponible": true,
+      "disponible": false,
       "limpieza_eur": 0,
       "estado": "reservable",
       "fuente": "api"
