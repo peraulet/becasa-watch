@@ -1,5 +1,5 @@
 {
-  "ts": "2026-10-13T16:33:26+00:00",
+  "ts": "2026-10-13T21:37:56+00:00",
   "estancia_dias": 335,
   "check_in": "2026-11-12",
   "check_out": "2027-10-13",
@@ -185,19 +185,8 @@
       "fuente": "html"
     }
   ],
-  "tramos_duracion": {
-    "none": 893.0,
-    "m2_3": 1111.0,
-    "m4_6": 1111.0,
-    "m7_9": 1024.0,
-    "m10_12": 893.0
-  },
-  "promos_web": [
-    "Ahorra hasta 210€/mes (a partir de 2 meses)",
-    "Ahorra hasta 115€/mes (a partir de 7 meses)",
-    "Ahorra hasta 95€/mes (a partir de 10 meses)",
-    "ahorrar hasta 302€"
-  ],
+  "tramos_duracion": {},
+  "promos_web": [],
   "promos_cms": [
     {
       "url": "https://cmseditor.becasaapartments.com/wp-content/uploads/2026/04/BCV-Promocion-30-04-2026.pdf",
