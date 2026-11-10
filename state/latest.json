@@ -1,8 +1,8 @@
 {
-  "ts": "2026-11-09T21:10:34+00:00",
+  "ts": "2026-11-10T03:39:59+00:00",
   "estancia_dias": 335,
-  "check_in": "2026-12-09",
-  "check_out": "2027-11-09",
+  "check_in": "2026-12-10",
+  "check_out": "2027-11-10",
   "unidades": [
     {
       "id": "1321",
@@ -23,7 +23,7 @@
       "eur_noche": 100.0,
       "min_stay_dias": 61,
       "max_stay_dias": 362,
-      "disponible": false,
+      "disponible": true,
       "limpieza_eur": 0,
       "estado": "reservable",
       "fuente": "api"
