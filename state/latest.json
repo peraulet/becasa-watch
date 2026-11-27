@@ -1,5 +1,5 @@
 {
-  "ts": "2026-11-27T08:51:34+00:00",
+  "ts": "2026-11-27T18:33:10+00:00",
   "estancia_dias": 335,
   "check_in": "2026-12-27",
   "check_out": "2027-11-27",
@@ -196,7 +196,8 @@
     "Ahorra hasta 210€/mes (a partir de 2 meses)",
     "Ahorra hasta 115€/mes (a partir de 7 meses)",
     "Ahorra hasta 95€/mes (a partir de 10 meses)",
-    "ahorrar hasta 302€"
+    "ahorrar hasta 302€",
+    "10% de descuento"
   ],
   "promos_cms": [
     {
